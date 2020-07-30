@@ -1,0 +1,93 @@
+@charset "UTF-8";
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.card{
+	display:inline-block;
+	margin-top:20px;
+	margin-left:150px;
+	box-shadow: 0 2px 4px 0 rgb(0,0,0,0.15);
+	transform: scale(1);
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	-ms-transform: scale(1);
+	-o-transform: scale(1);
+	transition: all 0.3s ease-in-out;
+}
+.card:hover{
+   transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  -o-transform: scale(1.2);	
+}
+.card img{
+	height:208px;
+}
+.row{
+	margin-top:30px;
+}
+.footer_container{
+	margin-top:20px;
+	height:10%;
+}
+.footer_container{
+	text-align:center;
+}
+.footer_logo{
+	display:inline-block;
+	margin-left:10px;
+}
+
+.footer_logo img{
+	width:30px;
+	height:30px;
+}
+.carousel-item{
+  background-size: cover;
+  height: 400px;
+  text-align: center;
+  vertical-align: middle;
+}
+.carousel-item.item1{
+  background-image: url(../images/course2.jpg);
+  background-position: left center;
+}
+.carousel-item.item2{
+  background-image: url(../images/makeup.jpg);
+  background-position: center top;
+}
+.carousel-item.item3{
+  background-image: url(../images/course6.jpg);
+  background-position: center center;
+}
+.helper{
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.intro{
+  display: inline-block;
+  vertical-align: middle;
+}
+.intro h2{
+  font-size: 32px;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 18px;
+  margin-top: 0;
+}
+.intro h3{
+  font-size: 22px;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 48px;
+}
+.intro a{
+  background-color: #5900E7;
+  font-size: 16px;
+  color: white;
+  padding: 10px 30px;
+  text-decoration: none;
+}
