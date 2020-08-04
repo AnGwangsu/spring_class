@@ -24,6 +24,7 @@ import com.springbook.board.common.Const;
 import com.springbook.board.common.KakaoAuth;
 import com.springbook.board.common.KakaoUserInfo;
 import com.springbook.board.common.MyUtil;
+import com.springbook.board.common.Properties;
 
 @Service
 public class UserService {
@@ -133,14 +134,17 @@ public class UserService {
 			String result2 = respEntity2.getBody();
 			System.out.println("result2 : " + result2);
 				
-				
 			KakaoUserInfo kui = null;
+			KakaoUserInfo kui2 = null;
+			
 			try {
 				//jackson으로 필요한 정보만 받아온다.
 				kui = om.readValue(result2, KakaoUserInfo.class);
+				kui2 = om.readValue(result2, KakaoUserInfo.class);
 					
 				System.out.println("id: " + kui.getId());
 				System.out.println("connected_at: " + kui.getConnected_at());
+				System.out.println("nickname:"+kui2.getProperties().getNickname());
 					
 			} catch (JsonMappingException e) {			
 				e.printStackTrace();
@@ -157,7 +161,7 @@ public class UserService {
 			
 			//회원가입
 			if(dbResult == null) {
-				uvo.setNm(uvo.getCid());
+				uvo.setNm(kui2.getProperties().getNickname());
 				uvo.setCpw("");
 				uvo.setPh("");
 				uvo.setSalt("");
