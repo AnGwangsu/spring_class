@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springbook.board.user.UserMapper"> 
+	
+	<insert id="join" parameterType="com.springbook.board.user.UserVO"
+		useGeneratedKeys="true" keyProperty="i_user">
+		INSERT INTO t_user
+		(cid, cpw,salt,ph,nm, addr) 
+		VALUES
+		(#{cid},#{cpw},#{salt},#{ph},#{nm}, #{addr})
+	</insert>
+	<select id="login" resultType="com.springbook.board.user.UserVO" parameterType="com.springbook.board.user.UserVO" >
+		SELECT i_user,cpw,salt,nm FROM t_user WHERE cid =#{cid}
+	</select>
+</mapper>
