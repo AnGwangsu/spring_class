@@ -1,9 +1,5 @@
 package com.springbook.board.common;
 
-
-
-import java.util.Random;
-
 import org.mindrot.jbcrypt.BCrypt;
 
 

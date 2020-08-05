@@ -7,6 +7,26 @@ public class BoardVO {
 	private String r_dt;
 	
 	
+	private int sIdx;
+	private int count;
+	private String searchText;
+	
+	public int getSIdx() {
+		return sIdx;
+	}
+	public void setSIdx(int sidx) {
+		this.sIdx = sidx;
+	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	
+	
+	
 	public int getI_board() {
 		return i_board;
 	}
@@ -31,6 +51,13 @@ public class BoardVO {
 	public void setR_dt(String r_dt) {
 		this.r_dt = r_dt;
 	}
+	public String getSearchText() {
+		return searchText;
+	}
+	public void setSearchText(String searchText) {
+		this.searchText = searchText;
+	}
+	
 	
 	
 }
