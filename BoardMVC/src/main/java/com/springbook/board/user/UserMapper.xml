@@ -5,11 +5,27 @@
 	<insert id="join" parameterType="com.springbook.board.user.UserVO"
 		useGeneratedKeys="true" keyProperty="i_user">
 		INSERT INTO t_user
-		(cid, cpw,salt,ph,nm, addr) 
+		(cid, cpw,salt,ph,nm,addr) 
 		VALUES
 		(#{cid},#{cpw},#{salt},#{ph},#{nm}, #{addr})
 	</insert>
-	<select id="login" resultType="com.springbook.board.user.UserVO" parameterType="com.springbook.board.user.UserVO" >
-		SELECT i_user,cpw,salt,nm FROM t_user WHERE cid =#{cid}
+	<select id="selUser" parameterType="com.springbook.board.user.UserVO"
+		resultType="com.springbook.board.user.UserVO">
+		SELECT i_user, cid, cpw, nm, r_dt, salt, profileImg
+		FROM t_user
+		WHERE 
+		<if test='cid != null and cid != ""'>cid = #{cid}</if>	
+		<if test='i_user >0'> and i_user = #{i_user}</if>
 	</select>
+	<update id="updUser" parameterType="com.springbook.board.user.UserVO">
+		UPDATE t_user
+		SET m_dt = now()
+		<if test='cpw != null and cpw !=""'>, cpw = #{cpw}</if>
+		<if test='nm != null and nm !=""'>, nm = #{nm}</if>
+		<if test='addr != null and addr !=""'>, addr = #{addr}</if>
+		<if test='ph != null and ph !=""'>, ph = #{ph}</if>
+		<if test='profileImg != null'>, profileImg = #{profileImg}</if>		
+		WHERE i_user = #{i_user} 
+	
+	</update>
 </mapper>

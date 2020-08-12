@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 
 import com.springbook.board.common.Const;
 import com.springbook.board.common.MyUtil;
@@ -31,20 +31,17 @@ public class UserController {
 	}
 	@RequestMapping(value = "/loginPost", method = RequestMethod.POST) //연결 브릿지 담당
 	public String loginPost(UserVO uvo, Model model, HttpSession hs) {
-		System.out.println("id:"+uvo.getCid());
-		System.out.println("pw:"+uvo.getCpw());
+		String msg="오류 발생!";
 		int result = service.login(uvo, hs);
 		if(result ==1) {
 			return "redirect:/board/list";
 		}else if(result == 3) {
-			System.out.println("id가 존재하지 않습니다.");
+			msg="비밀번호가 틀립니다.";
 		}else if(result == 2) {
-			System.out.println("비밀번호가 틀립니다.");
-		}else {
-			System.out.println("오류 발생!");
+		    msg="아이디가 없습니다.";
 		}
-		model.addAttribute("data",service.login(uvo,hs));
-		return "redirect:/board/list";
+		model.addAttribute("msg",msg);
+		return "user/login";
 		
 	}
 	@RequestMapping(value = "/join", method = RequestMethod.GET) //연결 브릿지 담당
@@ -106,6 +103,26 @@ public class UserController {
 		int result = service.kakaoLogin(code,hs);
 		
 		return "redirect:/board/list";
+	}
+	@RequestMapping(value = "/profile", method = RequestMethod.GET) //연결 브릿지 담당
+	public String profile(Model model,HttpSession hs) {
+		model.addAttribute("myProfile",service.getProfileImg(hs));
+		return "user/profile";
+	}
+	@RequestMapping(value="/profile", method=RequestMethod.POST)
+	public String profile(@RequestParam("uploadProfile") MultipartFile file
+			,HttpSession hs) {	
+		
+		if(!file.isEmpty()) {
+		//로그인을 해야 serive실행이 됨 (hs을 넣어줬기때문에)
+		service.uploadProfile(file,hs);
+		}	
+		return "redirect:/user/profile";
+	}
+	@RequestMapping(value="/delProfile", method=RequestMethod.GET)
+	public String delProfile(HttpSession hs) {
+		service.delProfileImgParent(hs);
+		return "redirect:/user/profile";
 	}
 	@RequestMapping(value="/logout", method=RequestMethod.GET)
 	public String logout(HttpSession hs) {

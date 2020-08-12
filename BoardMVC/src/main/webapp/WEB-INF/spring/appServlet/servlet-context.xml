@@ -49,4 +49,14 @@
 	<mybatis-spring:scan base-package="com.springbook.board"/>
 	
 	<beans:bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+	
+	<!-- 세션이 없을때 튕겨내는 beans -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/board/*"/>
+			<beans:bean class="com.springbook.board.common.CheckInterceptor"/>
+		</interceptor>
+	</interceptors>	
+	
+	
 </beans:beans>

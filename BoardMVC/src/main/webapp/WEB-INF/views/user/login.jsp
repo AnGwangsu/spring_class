@@ -7,6 +7,7 @@
 <title>Login</title>
 </head>
 <body>
+	<div>${msg }</div>
 	<form action="/user/loginPost" method="post">
 		<div><input type="text" name="cid" placeholder="아이디"></div>
 		<div><input type="password" name="cpw" placeholder="비밀번호"></div>

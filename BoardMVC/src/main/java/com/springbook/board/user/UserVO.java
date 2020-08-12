@@ -11,6 +11,7 @@ public class UserVO {
 	private String addr;
 	private String ph;
 	private String phAuthNumber;
+	private String profileImg;
 	
 	public String getPhAuthNumber() {
 		return phAuthNumber;
@@ -75,6 +76,12 @@ public class UserVO {
 	}
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+	public String getProfileImg() {
+		return profileImg;
+	}
+	public void setProfileImg(String profileImg) {
+		this.profileImg = profileImg;
 	}
 	
 	

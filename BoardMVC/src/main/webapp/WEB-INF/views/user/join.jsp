@@ -11,7 +11,7 @@
 	<form action="/user/joinPost" method="post">
 		<div><input type="text" name="cid" placeholder="아이디">${data.cid }</div>
 		<div><input type="password" name="cpw" placeholder="비밀번호">${data.cpw }</div>
-		<div><input type="password" name="cpw" placeholder="비밀번호확인">${data.cpw }</div>
+		<div><input type="password" name="cpwConfirm" placeholder="비밀번호확인">${data.cpw }</div>
 		<div>
 			Phone : 010 - <input type="text" name="ph" id="ph">
 			<button  type="button" onclick="sendPhAuthNumber()">인증번호 보내기</button>

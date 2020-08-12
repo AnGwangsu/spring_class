@@ -3,7 +3,7 @@ package com.springbook.board.user;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import javax.servlet.http.HttpSession;	
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -24,7 +25,6 @@ import com.springbook.board.common.Const;
 import com.springbook.board.common.KakaoAuth;
 import com.springbook.board.common.KakaoUserInfo;
 import com.springbook.board.common.MyUtil;
-import com.springbook.board.common.Properties;
 
 @Service
 public class UserService {
@@ -43,29 +43,89 @@ public class UserService {
 		result = mapper.join(uvo);
 		return result;
 	}
+
 	public int login(UserVO uvo, HttpSession hs) {
-		int result = 0;  //0:DB오류 1:로그인 성공  2:id없음 3:비밀번호 틀림
-		
-		UserVO db = mapper.login(uvo);
+		int result = 0;
+		UserVO db = mapper.selUser(uvo);
 		
 		if(db != null) {
 			String pw = uvo.getCpw();
 			String salt = db.getSalt();
-			String hashPw = MyUtil.hashPassword(pw,salt);
-			
+			String hashPw = MyUtil.hashPassword(pw, salt);
 			if(db.getCpw().equals(hashPw)) {
-				db.setCpw(null); //세션을 주고 비밀번호를 지워 정보를 보호
+				result = 1;
+				uvo.setCpw(null);
 				hs.setAttribute("loginUser", db);
-				result =1;
 			}else {
-				result =3;
+				result = 3;
 			}
 		}else {
-		result =2;
+			result = 2;
 		}
-		
+		System.out.println("result:"+result);
 		return result;
 	}
+	public void delProfileImgParent(HttpSession hs) {
+		delProfileImg(hs);
+		
+		UserVO loginUser = (UserVO)hs.getAttribute("loginUser");
+		
+		//DB profileImg에 빈칸 넣기
+		UserVO param = new UserVO();
+		param.setI_user(loginUser.getI_user());
+		param.setProfileImg("");
+		
+		mapper.updUser(param);
+	}
+	
+	private void delProfileImg(HttpSession hs) {
+		UserVO loginUser = (UserVO)hs.getAttribute("loginUser");
+
+		String realPath = hs.getServletContext().getRealPath("/"); //루트 절대경로 가져오기
+		String imgFolder = realPath + "/resources/img/user/" + loginUser.getI_user();
+		
+		UserVO dbUser = mapper.selUser(loginUser);
+		if(!"".equals(dbUser.getProfileImg())) { //기존 이미지가 있으면 삭제 처리
+			String imgPath = imgFolder + "/" + dbUser.getProfileImg();
+			MyUtil.deleteFile(imgPath);
+		}	
+	}
+	
+	public void uploadProfile(MultipartFile file, HttpSession hs) {
+		UserVO loginUser = (UserVO)hs.getAttribute("loginUser");		
+				
+		delProfileImg(hs); //기존 이미지 삭제
+		
+		String realPath = hs.getServletContext().getRealPath("/"); //루트 절대경로 가져오기
+		String imgFolder = realPath + "/resources/img/user/" + loginUser.getI_user();
+		
+		String fileNm = MyUtil.saveFile(imgFolder, file);
+
+		UserVO param = new UserVO();
+		param.setI_user(loginUser.getI_user());
+		param.setProfileImg(fileNm);
+		
+		mapper.updUser(param);		
+	}
+	
+	public String getProfileImg(HttpSession hs) {
+		String profileImg = null;
+		
+		UserVO loginUser = (UserVO)hs.getAttribute("loginUser");
+		UserVO dbResult = mapper.selUser(loginUser);
+		
+		profileImg = dbResult.getProfileImg();
+		
+		if(profileImg == null || profileImg.equals("")) {
+			profileImg = "/resources/img/image.jpg";
+		} else {
+			profileImg = "/resources/img/user/" + loginUser.getI_user() + "/" + profileImg;
+		}
+		
+		return profileImg;		
+	}
+	
+	
 	public int kakaoLogin(String code,HttpSession hs) {
 		int result =0;
 		//---------------------------------사용자 토큰 받기(access_token,refresh_token)-----------------------//
@@ -157,7 +217,7 @@ public class UserService {
 			UserVO uvo = new UserVO();
 			uvo.setCid(String.valueOf(kui.getId()));
 			
-			UserVO dbResult = mapper.login(uvo);
+			UserVO dbResult = mapper.selUser(uvo);
 			
 			//회원가입
 			if(dbResult == null) {
